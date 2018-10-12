@@ -6,7 +6,7 @@
   roles: 
     - { role: davidkarban.repo_epel, tags: epel }
     - { role: VerosK.docker, tags: docker }
-    - { role: VerosK.nginx, tags: nginx }
+#    - { role: VerosK.nginx, tags: nginx }
 
   tasks:
     - name: Ensure firewall allow access to awx machine
