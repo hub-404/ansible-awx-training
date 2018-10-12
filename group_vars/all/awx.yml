@@ -13,7 +13,7 @@ awx_pg_database: awx
 awx_pg_username: awx
 awx_pg_password: "aiwepohfie1ohpu4phoh0jetheebaequae3paeFu8w"
 awx_pg_port: 5432
-awx_pg_hostname: '{{ awx_postgresql_server }}'
+# awx_pg_hostname: 'postgres'  # running in Docker
 
 awx_default_admin_user: admin
 awx_default_admin_password: nbusr123
