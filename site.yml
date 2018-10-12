@@ -25,7 +25,7 @@
   tasks:
     - name: Get docker-compose
       get_url:
-        url: https://github.com/docker/compose/releases/download/1.22.0/docker-compose-Linux-x86_65
+        url: https://github.com/docker/compose/releases/download/1.22.0/docker-compose-Linux-x86_64
         dest: /usr/bin/docker-compose
         mode: 0755
 
