@@ -79,3 +79,15 @@ services:
   memcached:
     image: memcached:alpine
     restart: unless-stopped
+
+  postgres:
+    image: postgres:9.6
+    restart: unless-stopped
+    volumes:
+      - ./postgres:/var/lib/postgresql/data:Z
+    environment:
+      POSTGRES_USER: {{ awx_pg_username }}
+      POSTGRES_PASSWORD: {{ awx_pg_password }}
+      POSTGRES_DB: {{ awx_pg_database }}
+      PGDATA: /var/lib/postgresql/data/pgdata
+
