@@ -1,0 +1,18 @@
+- src:  https://github.com/VerosK/ansible-role-docker.git
+  name: VerosK.docker
+
+- src:  https://github.com/davidkarban/ansible-role-ansible.git
+  name: davidkarban.ansible
+
+
+- src: https://github.com/davidkarban/ansible-repo_epel
+  name: davidkarban.repo_epel
+
+#- src: ANXS.postgresql
+#  name: ANXS.postgresql
+
+#- src: https://github.com/VerosK/ansible-acme-sh
+#  name: VerosK.acme.sh
+
+#- src: https://github.com/VerosK/ansible-nginx-base
+#  name: VerosK.nginx

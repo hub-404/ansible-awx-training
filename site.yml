@@ -1,0 +1,46 @@
+- name: Add AWX requirements
+  hosts: training-awx
+  any_errors_fatal: true
+  become: yes
+
+  roles: 
+    - { role: davidkarban.repo_epel, tags: epel }
+    - { role: VerosK.docker, tags: docker }
+    - { role: VerosK.nginx, tags: nginx }
+
+  tasks:
+    - name: Ensure firewall allow access to awx machine
+      firewalld:
+        immediate: true
+        permanent: true
+        port: 80/tcp
+        state: enabled
+      when: with_firewalld
+
+- name: Add AWX
+  hosts: training-awx
+  any_errors_fatal: true
+  become: yes
+  tags: awx
+  tasks:
+    - name: Get docker-compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.22.0/docker-compose-Linux-x86_65
+        dest: /usr/bin/docker-compose
+        mode: 0755
+
+    - name: Create AWX dir
+      file:
+        path: /opt/awx
+        state: directory
+
+    - name: Create AWX compose
+      template:
+        src: awx-compose.yml.j2
+        dest: /opt/awx/docker-compose.yml
+
+#    - name: Start compose
+#      shell:
+#        docker-compose up --detach
+#      args:
+#        chdir: /opt/awx

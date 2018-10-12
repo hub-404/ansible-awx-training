@@ -1,0 +1,81 @@
+#jinja2: lstrip_blocks: True
+version: '2'
+services:
+
+  web:
+    image: {{ awx_web_docker_actual_image }}
+    depends_on:
+      - rabbitmq
+      - memcached
+    ports:
+      - "{{ awx_host_port }}:8052"
+    hostname: awxweb
+    user: root
+    restart: unless-stopped
+    volumes:
+      - "{{ awx_project_data_dir +':/var/lib/awx/projects:rw' }}"
+{#    {% endif %}#}
+{#    {% if ca_trust_dir is defined %}#}
+{#      - "{{ ca_trust_dir +':/etc/pki/ca-trust/source/anchors:ro' }}"#}
+{#    {% endif %}#}
+    environment:
+      http_proxy: {{ awx_http_proxy | default('') }}
+      https_proxy: {{ awx_https_proxy | default('') }}
+      no_proxy: {{ awx_no_proxy | default('') }}
+      SECRET_KEY: {{ awx_secret_key }}
+      DATABASE_NAME: {{ awx_pg_database }}
+      DATABASE_USER: {{ awx_pg_username }}
+      DATABASE_PASSWORD: {{ awx_pg_password }}
+      DATABASE_PORT: {{ awx_pg_port }}
+      DATABASE_HOST: {{ awx_pg_hostname|default("postgres") }}
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_VHOST: awx
+      MEMCACHED_HOST: memcached
+      MEMCACHED_PORT: 11211
+      AWX_ADMIN_USER: {{ awx_default_admin_user|default('admin') }}
+      AWX_ADMIN_PASSWORD: {{ awx_default_admin_password|default('password') }}
+
+  task:
+    image: {{ awx_task_docker_actual_image }}
+    depends_on:
+      - rabbitmq
+      - memcached
+      - web
+    hostname: awx
+    user: root
+    restart: unless-stopped
+    volumes:
+      - "{{ awx_project_data_dir +':/var/lib/awx/projects:rw' }}"
+    environment:
+      http_proxy: {{ awx_http_proxy | default('') }}
+      https_proxy: {{ awx_https_proxy | default('') }}
+      no_proxy: {{ awx_no_proxy | default('') }}
+      SECRET_KEY: {{ awx_secret_key }}
+      DATABASE_NAME: {{ awx_pg_database }}
+      DATABASE_USER: {{ awx_pg_username }}
+      DATABASE_PASSWORD: {{ awx_pg_password }}
+      DATABASE_HOST: {{ awx_pg_hostname|default("postgres") }}
+      DATABASE_PORT: {{ awx_pg_port }}
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_VHOST: awx
+      MEMCACHED_HOST: memcached
+      MEMCACHED_PORT: 11211
+      AWX_ADMIN_USER: {{ awx_default_admin_user|default('admin') }}
+      AWX_ADMIN_PASSWORD: {{ awx_default_admin_password|default('password') }}
+
+  rabbitmq:
+    image: {{ awx_rabbitmq_image }}
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_VHOST: awx
+      RABBITMQ_ERLANG_COOKIE: cookiemonster
+
+  memcached:
+    image: memcached:alpine
+    restart: unless-stopped

@@ -1,0 +1,4 @@
+docker_add_repository: true
+
+awx_postgresql_server: "{{ awx_postgres_address }}"
+awx_project_data_dir: /opt/awx/projects
