@@ -39,8 +39,8 @@
         src: awx-compose.yml.j2
         dest: /opt/awx/docker-compose.yml
 
-#    - name: Start compose
-#      shell:
-#        docker-compose up --detach
-#      args:
-#        chdir: /opt/awx
+    - name: Start compose
+      shell:
+        docker-compose up --detach
+      args:
+        chdir: /opt/awx
