@@ -1,0 +1,38 @@
+
+- name: Get docker-compose
+  get_url:
+    url: https://github.com/docker/compose/releases/download/1.22.0/docker-compose-Linux-x86_64
+    dest: /usr/bin/docker-compose
+    mode: 0755
+
+- name: Create AWX dir
+  file:
+    path: /opt/awx
+    state: directory
+
+- name: Create AWX secret
+  copy:
+    content: "{{ awx_secret_key }}\n"
+    dest: /opt/awx/SECRET_KEY
+    force: no
+
+- name: Create AWX credentials
+  template:
+    src: awx-credentials.py.j2
+    dest: /opt/awx/credentials.py
+    force: no
+
+- name: Create AWX compose
+  template:
+    src: awx-compose.yml.j2
+    dest: /opt/awx/docker-compose.yml
+
+
+
+- name: Start compose
+  shell:
+    docker-compose up --detach
+  args:
+    chdir: /opt/awx
+  when: awx_start
+

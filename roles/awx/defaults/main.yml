@@ -1,0 +1,24 @@
+awx_version: 4.0.0
+awx_web_image: "ansible/awx_web"
+awx_task_image: "ansible/awx_task"
+awx_rabbitmq_image: "ansible/awx_rabbitmq:3.7.4"
+
+awx_web_docker_actual_image: '{{ awx_web_image }}:{{ awx_version }}'
+awx_task_docker_actual_image: '{{ awx_task_image }}:{{ awx_version }}'
+awx_host_port: 80
+awx_project_data_dir: /var/lib/awx/projects
+
+awx_pg_database: awx
+awx_pg_username: awx
+awx_pg_password: "aiwepohfie1ohpu4phoh0jetheebaequae3paeFu8w"
+awx_pg_port: 5432
+# awx_pg_hostname: 'postgres'  # running in Docker
+
+awx_default_admin_user: admin
+awx_default_admin_password: nbusr123
+
+awx_rabbitmq_user: guest
+awx_rabbitmq_password: guest
+
+awx_start: true
+awx_secret_key: '{{ 99999999 | random(seed=inventory_hostname) | to_uuid }} '
