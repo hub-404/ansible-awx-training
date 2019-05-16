@@ -16,6 +16,14 @@
         port: 80/tcp
         state: enabled
       when: with_firewalld
+      ignore_errors: yes
+
+    - name: Stop nginx and httpd (when present)
+      service:
+        name: '{{ item }}'
+        state: stopped
+      loop: [ httpd, nginx ]
+      ignore_errors: yes
 
 - name: Add AWX
   hosts: training-awx
