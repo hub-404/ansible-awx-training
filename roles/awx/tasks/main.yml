@@ -27,8 +27,6 @@
     src: awx-compose.yml.j2
     dest: /opt/awx/docker-compose.yml
 
-
-
 - name: Start compose
   shell:
     docker-compose up --detach
