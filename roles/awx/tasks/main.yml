@@ -16,11 +16,23 @@
     dest: /opt/awx/SECRET_KEY
     force: no
 
+- name: Create AWX environment
+  template:
+    src: awx-environment.sh.j2
+    dest: /opt/awx/environment
+    force: no
+
+- name: Create AWX nginx config
+  template:
+    src: awx-nginx.conf.j2
+    dest: /opt/awx/nginx.conf
+    force: no
+
 - name: Create AWX credentials
   template:
     src: awx-credentials.py.j2
     dest: /opt/awx/credentials.py
-    force: no
+    force: yes
 
 - name: Create AWX compose
   template:
@@ -33,4 +45,3 @@
   args:
     chdir: /opt/awx
   when: awx_start
-

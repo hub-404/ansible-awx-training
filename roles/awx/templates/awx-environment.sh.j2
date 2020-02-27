@@ -1,0 +1,15 @@
+SECRET_KEY={{ awx_secret_key }}
+DATABASE_NAME={{ awx_pg_database }}
+DATABASE_USER={{ awx_pg_username }}
+DATABASE_PASSWORD={{ awx_pg_password }}
+DATABASE_HOST={{ awx_pg_hostname|default("postgres") }}
+DATABASE_PORT={{ awx_pg_port }}
+RABBITMQ_USER=guest
+RABBITMQ_PASSWORD={{ awx_rabbitmq_password }}
+RABBITMQ_HOST={{ awx_rabbitmq_hostname }}
+RABBITMQ_PORT=5672
+RABBITMQ_VHOST=awx
+MEMCACHED_HOST={{ awx_memcache_hostname }}
+MEMCACHED_PORT={{ awx_memcache_port }}
+AWX_ADMIN_USER={{ awx_default_admin_user|default('admin') }}
+AWX_ADMIN_PASSWORD={{ awx_default_admin_password|default('password') }}
