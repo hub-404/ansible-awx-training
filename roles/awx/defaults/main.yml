@@ -5,7 +5,7 @@ awx_rabbitmq_image: "ansible/awx_rabbitmq:3.7.4"
 
 awx_web_docker_actual_image: '{{ awx_web_image }}:{{ awx_version }}'
 awx_task_docker_actual_image: '{{ awx_task_image }}:{{ awx_version }}'
-awx_host_port: 80
+awx_host_port: '127.0.0.1:8052'
 awx_project_data_dir: /var/lib/awx/projects
 
 awx_pg_version: 11

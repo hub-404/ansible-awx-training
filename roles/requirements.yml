@@ -11,8 +11,5 @@
 #- src: ANXS.postgresql
 #  name: ANXS.postgresql
 
-#- src: https://github.com/VerosK/ansible-acme-sh
-#  name: VerosK.acme.sh
-
-#- src: https://github.com/VerosK/ansible-nginx-base
-#  name: VerosK.nginx
+- src: https://github.com/VerosK/ansible-nginx-base
+  name: VerosK.nginx

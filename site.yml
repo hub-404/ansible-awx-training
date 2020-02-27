@@ -4,9 +4,10 @@
   become: yes
 
   roles: 
-    - { role: davidkarban.repo_epel, tags: epel }
-    - { role: VerosK.docker, tags: docker }
-#    - { role: VerosK.nginx, tags: nginx }
+    - role: davidkarban.repo_epel
+      tags: epel
+    - role: VerosK.docker
+      tags: docker
 
   tasks:
     - name: Ensure firewall allow access to awx machine
@@ -18,11 +19,10 @@
       when: with_firewalld
       ignore_errors: yes
 
-    - name: Stop nginx and httpd (when present)
+    - name: Stop httpd
       service:
-        name: '{{ item }}'
+        name: 'httpd'
         state: stopped
-      loop: [ httpd, nginx ]
       ignore_errors: yes
 
 - name: Add AWX
@@ -33,3 +33,14 @@
   roles:
     - role: awx
       tags: awx
+
+- name: Add nginx when required
+  hosts: training-awx
+  any_errors_fatal: true
+  become: yes
+
+  roles:
+    - role: VerosK.nginx
+      tags: nginx
+      when: with_nginx|default(True)
+
