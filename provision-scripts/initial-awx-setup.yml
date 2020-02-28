@@ -1,0 +1,94 @@
+#!/usr/bin/env ansible-playbook
+
+- name: Make sure Ansible 2.9
+  hosts: localhost
+  tasks:
+    - fail:
+        msg: "Ansible 2.9+ required"
+      when: 'ansible_version.minor < 9'
+
+
+- name: Populate AWX
+  hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: Do AWX settings
+      tower_settings:
+        tower_config_file: '{{ playbook_dir }}/tower.cfg'
+        name: REMOTE_HOST_HEADERS
+        value: [ HTTP_X_FORWARDED_FOR, REMOTE_ADDR ]
+      tags: settings
+
+    - name: Setup cowsay organization
+      tower_organization: 
+        tower_config_file: '{{ playbook_dir }}/tower.cfg'
+        name: cowsay
+        state: present
+      register: _organization
+
+    - name: Create cowsay project
+      tower_project:
+        tower_config_file: '{{ playbook_dir }}/tower.cfg'
+        state: present
+        name: "cowsay"
+        description: "Cowsay playbook"
+        organization: "cowsay"
+        scm_type: git
+        scm_url: https://github.com/hub-404/hello-ansible
+        scm_branch: master
+        scm_update_on_launch: True
+        scm_update_cache_timeout: 90
+        #custom_virtualenv: "/var/lib/awx/venv/ansible-2.2"
+
+    - name: Upload SSH host key
+      tower_credential:
+        tower_config_file: '{{ playbook_dir }}/tower.cfg'
+        kind: ssh
+        name: 'awx-user'
+        username: ansible
+        password: nbusr123
+        become_method: sudo
+        organization: cowsay
+        state: present
+      register: _machine_credentials
+
+    - name: Create cowsay inventory
+      tower_inventory:
+        tower_config_file: '{{ playbook_dir }}/tower.cfg'
+        state: present
+        name: "Cowsay hosts"
+        description: "Ansible playbooks to provision"
+        organization: "cowsay"
+      tags: inventory
+
+    - name: Create cowsay inventory from project
+      tower_host:
+        tower_config_file: '{{ playbook_dir }}/tower.cfg'
+        state: present
+        inventory: "Cowsay hosts"
+        name: "ansible-demo.on.gpx.cz"
+        variables:
+          ansible_user: 'ansible'
+          ansible_become: true
+      tags: inventory
+
+
+    - name: Create cowsay job
+      tower_job_template:
+        name: 'Cowsay job'
+        description: 'Cowsay'
+        job_type: check
+        ask_job_type: true
+        inventory: "Cowsay hosts"
+        project: "c owsay"
+        playbook: "01-add-cowsay.yml"
+        credential: "awx-user"
+        ask_limit: true
+        verbosity: 1
+        become_enabled: yes
+        diff_mode_enabled: yes
+      tags: jobs
+
+
+# tower-cli schedule create -n "Check etckeeper bi-hourly"  --job-template "Production: Check etckeeper"  --rrule "DTSTART;TZID=Europe/Berlin:20200131T001700 RRULE:FREQ=HOURLY;INTERVAL=2"
